@@ -1,0 +1,16 @@
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC.csproj.AssemblyReference.cache
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\MainWindow.g.cs
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\App.g.cs
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC_MarkupCompile.cache
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC_MarkupCompile.lref
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\bin\Debug\FTXScrubImportSheetC.exe.config
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\bin\Debug\FTXScrubImportSheetC.exe
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\bin\Debug\FTXScrubImportSheetC.pdb
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\MainWindow.baml
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC.g.resources
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC.Properties.Resources.resources
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC.csproj.GenerateResource.cache
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC.csproj.CoreCompileInputs.cache
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC.exe
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\FTXScrubImportSheetC.pdb
+C:\Workspace\FTXScrubImportSheetC\FTXScrubImportSheetC\FTXScrubImportSheetC\obj\Debug\GeneratedInternalTypeHelper.g.cs
