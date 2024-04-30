@@ -38,7 +38,7 @@ namespace FTXScrubImportSheetC
             ImportAliasFoundData = new List<clsProductData>();
             CopyCommand = new RelayCommand(CopyToClipboard);
             PasteCommand = new RelayCommand(PasteFromClipboard);
-            _csvHelper = new CsvHelper(InstallDirectory, CSVColumnHeaders, PrintFilePath);
+            _csvHelper = new CsvHelper(InstallDirectory, CSVColumnHeaders);
             // Initialize LogHelper (assuming LogHelper has a static method for initialization)
             LogHelper.Initialize();
         }
@@ -60,19 +60,7 @@ namespace FTXScrubImportSheetC
         public List<clsProductData> ImportFullData = new List<clsProductData>();
         public List<clsProductData> ImportNotFoundData = new List<clsProductData>();
         public List<clsProductData> ImportAliasFoundData = new List<clsProductData>();
-
-        private string _printFilePath;
-
-        public  string PrintFilePath
-        {
-            get { return _printFilePath; }
-            set
-            {
-                _printFilePath = value;
-                OnPropertyChanged(nameof(PrintFilePath));
-            }
-        }
-
+        
         private ObservableCollection<string> logListBox = new ObservableCollection<string>();
 
         public ObservableCollection<string> LogListBox

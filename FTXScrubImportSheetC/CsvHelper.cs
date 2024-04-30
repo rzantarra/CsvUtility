@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FTXScrubImportSheetC
@@ -9,12 +10,12 @@ namespace FTXScrubImportSheetC
     {
 
         #region Constructor
-
-        public CsvHelper(string installDirectory, string csvColumnHeaders, string printFilePath)
+        
+        public CsvHelper(string installDirectory, string csvColumnHeaders)
         {
             InstallDirectory = installDirectory;
             CSVColumnHeaders = csvColumnHeaders;
-            PrintFilePath = printFilePath;
+            
         }
 
 
@@ -22,13 +23,48 @@ namespace FTXScrubImportSheetC
         #region Variables
         public string InstallDirectory { get; private set; }
         public string CSVColumnHeaders { get; private set; }
-        public string PrintFilePath { get; private set; }
         #endregion
 
         #region Functions
 
-         
-
+        public async Task ExpandUpcOnly(MainWindowViewModel _viewModel)
+        {
+            string tmpUpdateTxt;
+            //string PrintFilePath = MainWindowViewModel.InstallDirectory;
+            
+            _viewModel.UpdateStatusTxt = $"Expand Export Only Option Initiated";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Expand Export Only Option Initiated.");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            
+            string filePath = Path.Combine(InstallDirectory, "ImportExpandedOnly_");
+            WriteToCSV(_viewModel.ImportExpandedUPCData, "ImportExpandedOnly_");
+            string message = $@"File Saved Successfully: {filePath}";
+            //MessageBox.Show(message, "Expand Export Only Option", MessageBoxButton.OK, MessageBoxImage.Information);
+            
+            _viewModel.UpdateStatusTxt = $"Expand Export Only Option Complete";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Expand Export Only Option Complete");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            
+           DataHelper.ClearProductDataList(_viewModel.CurrentMasterProducts);
+            DataHelper.ClearProductDataList(_viewModel.ImportFullData);
+            DataHelper.ClearProductDataList(_viewModel.ImportNativeData);
+            DataHelper.ClearProductDataList(_viewModel.ImportAliasFoundData);
+            DataHelper.ClearProductDataList(_viewModel.ImportNAData);
+            DataHelper.ClearProductDataList(_viewModel.ImportNotFoundData);
+            DataHelper.ClearProductDataList(_viewModel.ImportExpandedUPCData);
+            DataHelper.ClearProductAliasList(_viewModel.ImportMasterProducts);
+            DataHelper.ClearProductAliasList(_viewModel.CurrentMasterAliases);
+            
+            _viewModel.UpdateStatusTxt = $"Scrub Cleanup: Wiping Internals";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Cleanup: Wiping Internals.");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            
+            return;
+        }
+        
         public void WriteToCSV(List<clsProductData> data, string fileNamePrefix)
         {
             try
@@ -65,8 +101,8 @@ namespace FTXScrubImportSheetC
                                 ex.InnerException?.Message);
             }
         }
-        
-               public static string ExpandUPC(string UPC)
+
+        public static string ExpandUPC(string UPC)
         {
             int OddSum, EvenSum, TotalSum, CheckDigit;
             string Char1, Char2, Char3, Char4, Char5, Char6;
@@ -389,7 +425,5 @@ namespace FTXScrubImportSheetC
         }
 
         #endregion
-
-
     }
 }

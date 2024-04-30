@@ -16,7 +16,7 @@ namespace FTXScrubImportSheetC
         {
             InitializeComponent();
             _viewModel = new MainWindowViewModel();
-            _csvHelper = new CsvHelper(MainWindowViewModel.InstallDirectory, MainWindowViewModel.CSVColumnHeaders, _viewModel.PrintFilePath);
+            _csvHelper = new CsvHelper(MainWindowViewModel.InstallDirectory, MainWindowViewModel.CSVColumnHeaders);
             DataContext = _viewModel;
             //_csvHelper = new CSVHelper();
         }
@@ -104,8 +104,6 @@ namespace FTXScrubImportSheetC
                 await MainWindowViewModel.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
                 await MainWindowViewModel.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
             {
-                //lblStatus.Content = "Scrubbing...";
-                //_viewModel.ClearExpandedUPCList(_viewModel);
                 _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
             }
             else
@@ -115,11 +113,7 @@ namespace FTXScrubImportSheetC
 
             if (CKExpandUPC.IsChecked == true)
             {
-                _csvHelper.WriteToCSV(_viewModel.ImportExpandedUPCData, "ImportExpandedOnly_");
-
-                string message = $"File Saved Successfully : {_viewModel.PrintFilePath}";
-                MessageBox.Show(message, "Expand Export Only Option", MessageBoxButton.OK, MessageBoxImage.Information);
-                // lblStatus.Content = "Idle.";
+                _csvHelper.ExpandUpcOnly(_viewModel);
                 return;
             }
             else

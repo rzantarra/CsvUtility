@@ -31,10 +31,6 @@ namespace FTXScrubImportSheetC
         public string alias { get; set; }
     }
     
-    
-
-    
-    
 }
     public class DataHelper
     {
