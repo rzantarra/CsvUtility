@@ -819,10 +819,10 @@ namespace FTXScrubImportSheetC
             _viewModel.AddLogMessage(tmpUpdateTxt = "Scrubbing Complete");
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
         }
-        
+
         public async Task Pruner(MainWindowViewModel _viewModel)
-        {}
-        
+        {
+        }
 
         #endregion
 

@@ -60,7 +60,7 @@ namespace FTXScrubImportSheetC
         public List<clsProductData> ImportFullData = new List<clsProductData>();
         public List<clsProductData> ImportNotFoundData = new List<clsProductData>();
         public List<clsProductData> ImportAliasFoundData = new List<clsProductData>();
-        
+
         private ObservableCollection<string> logListBox = new ObservableCollection<string>();
 
         public ObservableCollection<string> LogListBox
@@ -117,7 +117,7 @@ namespace FTXScrubImportSheetC
                 }
             }
         }
-        
+
         private List<clsProductAlias> _importMasterProducts;
 
         public List<clsProductAlias> ImportMasterProducts
@@ -153,7 +153,7 @@ namespace FTXScrubImportSheetC
                 OnPropertyChanged();
             }
         }
-        
+
         private string _productsFilePath;
 
         public string ProductsFilePath
@@ -400,7 +400,6 @@ namespace FTXScrubImportSheetC
         }
 
 
-
         public async void AddLogMessage(string message)
         {
             LogHelper.AddLogMessage(message);
@@ -408,14 +407,15 @@ namespace FTXScrubImportSheetC
 
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
         }
-        
+
         #endregion
-        
+
 
         #region TmpTrash
+
         //TODO Remove if nessessary 
 
-                // public async Task ScrubImport(MainWindowViewModel _viewModel)
+        // public async Task ScrubImport(MainWindowViewModel _viewModel)
         // {
         //     string tmpUpdateTxt;
         //
@@ -612,7 +612,7 @@ namespace FTXScrubImportSheetC
         //     _viewModel.AddLogMessage(tmpUpdateTxt = "Scrubbing Complete");
         //     await Task.Delay(TimeSpan.FromMilliseconds(0.5));
         // }
-          // public static async Task<bool> LoadMasterProducts(string FileToUse, MainWindowViewModel _viewModel)
+        // public static async Task<bool> LoadMasterProducts(string FileToUse, MainWindowViewModel _viewModel)
         // {
         //     try
         //     {
@@ -825,7 +825,6 @@ namespace FTXScrubImportSheetC
         // }
 
 
-        
         //This was moved to CsvHelper Class 
         // public void WriteToCSV(List<clsProductData> data, string fileNamePrefix)
         // {
@@ -861,8 +860,8 @@ namespace FTXScrubImportSheetC
         //         MessageBox.Show("Erorr Writing to CSV File: " + ex.Message + ex.StackTrace);
         //     }
         // }
-        
-        
+
+
         //Function was moved to CsvHelper.cs
         // private string EscapeCsvField(string field)
         // {
@@ -880,7 +879,7 @@ namespace FTXScrubImportSheetC
         //
         //     return field;
         // }
-        
+
         // public static string ExpandUPC(string UPC)
         // {
         //     int OddSum, EvenSum, TotalSum, CheckDigit;
@@ -1182,6 +1181,7 @@ namespace FTXScrubImportSheetC
         //         return "";
         //     }
         // }
+
         #endregion
     }
 }

@@ -14,103 +14,183 @@
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
     <Window.DataContext>
-        <local:MainWindowViewModel/>
+        <local:MainWindowViewModel />
     </Window.DataContext>
     <Grid Margin="15,15,263,10">
         <TabControl x:Name="tabControl">
-            <TabItem Header ="Scrub Importer" x:Name="Scrub_Importer">
+            <TabItem Header="Scrub Importer" x:Name="Scrub_Importer">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"/>
-                        <ColumnDefinition Width="61*"/>
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="61*" />
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Master Products" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                    <GroupBox Header="Master Products" HorizontalAlignment="Left" VerticalAlignment="Top"
+                              Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="250"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="250" />
+                                <ColumnDefinition Width="15" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Products CSV File:"/>
-                            <TextBox x:Name="txtProductsFile" Grid.Row="0" Grid.Column="1" Text="{Binding ProductsFilePath, Mode=TwoWay}"/>
-                            <Button Content="..." Grid.Row="0" Grid.Column="2" Click="cmdBrowseProductFile_Click"/>
-                            <Label Grid.Row="1" Grid.Column="0" Content="Product Aliases CSV File:"/>
-                            <TextBox x:Name="txtAliasFile" Grid.Row="1" Grid.Column="1" Text="{Binding AliasFilePath, Mode=TwoWay}"/>
-                            <Button Content="..." Grid.Row="1" Grid.Column="2" Click="cmdBrowseAliasFile_Click"/>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Products CSV File:" />
+                            <TextBox x:Name="txtProductsFile" Grid.Row="0" Grid.Column="1"
+                                     Text="{Binding ProductsFilePath, Mode=TwoWay}" />
+                            <Button Content="..." Grid.Row="0" Grid.Column="2" Click="cmdBrowseProductFile_Click" />
+                            <Label Grid.Row="1" Grid.Column="0" Content="Product Aliases CSV File:" />
+                            <TextBox x:Name="txtAliasFile" Grid.Row="1" Grid.Column="1"
+                                     Text="{Binding AliasFilePath, Mode=TwoWay}" />
+                            <Button Content="..." Grid.Row="1" Grid.Column="2" Click="cmdBrowseAliasFile_Click" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Import Sheet" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,85,0,0" Grid.ColumnSpan="2">
+                    <GroupBox Header="Import Sheet" HorizontalAlignment="Left" VerticalAlignment="Top"
+                              Margin="0,85,0,0" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="250"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="250" />
+                                <ColumnDefinition Width="15" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Import Sheet File:"/>
-                            <TextBox x:Name="txtImportSheetFile" Grid.Row="0" Grid.Column="1" Text="{Binding ImportSheetFilePath, Mode=TwoWay}"/>
-                            <Button Content="..." Grid.Row="0" Grid.Column="2" Click="cmdBrowseImportSheetFile_Click"/>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Import Sheet File:" />
+                            <TextBox x:Name="txtImportSheetFile" Grid.Row="0" Grid.Column="1"
+                                     Text="{Binding ImportSheetFilePath, Mode=TwoWay}" />
+                            <Button Content="..." Grid.Row="0" Grid.Column="2" Click="cmdBrowseImportSheetFile_Click" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Update Options" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,160,0,0" Grid.ColumnSpan="2">
+                    <GroupBox Header="Update Options" HorizontalAlignment="Left" VerticalAlignment="Top"
+                              Margin="0,160,0,0" Grid.ColumnSpan="2">
                         <Grid Margin="0,0,29,0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Update Descriptions" x:Name="CKUpdateDescriptions" IsChecked="{Binding CKUpdateDescriptions, Mode=TwoWay}" IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}"/>
-                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Update Categories" x:Name="CKUpdateCategories" IsChecked="{Binding CKUpdateCategories, Mode=TwoWay}" IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}"/>
-                            <CheckBox Grid.Row="0" Grid.Column="2" Content="ExpandUPC Only" x:Name="CKExpandUPC" IsChecked="{Binding CKExpandUPC, Mode=TwoWay}" IsEnabled="True" Margin="31,0,-31,0">
+                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Update Descriptions"
+                                      x:Name="CKUpdateDescriptions"
+                                      IsChecked="{Binding CKUpdateDescriptions, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Update Categories"
+                                      x:Name="CKUpdateCategories" IsChecked="{Binding CKUpdateCategories, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}" />
+                            <CheckBox Grid.Row="0" Grid.Column="2" Content="ExpandUPC Only" x:Name="CKExpandUPC"
+                                      IsChecked="{Binding CKExpandUPC, Mode=TwoWay}" IsEnabled="True"
+                                      Margin="31,0,-31,0">
                                 <CheckBox.Style>
                                     <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsExpandUPCOnlyChecked}" Value="True">
-                                                <Setter Property="Opacity" Value="1"/>
+                                                <Setter Property="Opacity" Value="1" />
                                                 <!-- Disable other checkboxes when ExpandUPC is checked -->
-                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Setter Property="IsEnabled" Value="False" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IsExpandUPCOnlyChecked}" Value="False">
-                                                <Setter Property="Opacity" Value="1"/>
-                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Setter Property="Opacity" Value="1" />
+                                                <Setter Property="IsEnabled" Value="True" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </CheckBox.Style>
                             </CheckBox>
-                            <CheckBox Grid.Row="1" Grid.Column="0" Content="Update Departments" x:Name="CKUpdateDept" IsChecked="{Binding CKUpdateDept, Mode=TwoWay}" IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}"/>
-                            <CheckBox Grid.Row="1" Grid.Column="1" Content="Update Manuf/Brand" x:Name="CKUpdateManufBrand" IsChecked="{Binding CKUpdateManufBrand, Mode=TwoWay}" IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}"/>
+                            <CheckBox Grid.Row="1" Grid.Column="0" Content="Update Departments" x:Name="CKUpdateDept"
+                                      IsChecked="{Binding CKUpdateDept, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}" />
+                            <CheckBox Grid.Row="1" Grid.Column="1" Content="Update Manuf/Brand"
+                                      x:Name="CKUpdateManufBrand" IsChecked="{Binding CKUpdateManufBrand, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsExpandUPCOnlyChecked, Converter={StaticResource InverseBooleanConverter}}" />
                         </Grid>
                     </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Pruner and Duplicate Hunter">
-                <GroupBox Header="Import CSV" HorizontalAlignment="Left" VerticalAlignment="Top">
-                   
-                </GroupBox>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="61*" />
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Import CSV" VerticalAlignment="Top" Height="64" Margin="0,0,118,0"
+                              Grid.ColumnSpan="2">
+                        <Grid Height="40" Margin="0,0,5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="250" />
+                                <ColumnDefinition Width="15" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Import Sheet File" />
+                            <TextBox x:Name="txtPrunerImportSheetFile" Grid.Row="0"
+                                     Text="{Binding ImportSheetFilePath, Mode=TwoWay}" Grid.ColumnSpan="2"
+                                     Margin="100,0,0,0" />
+                            <Button Content="..." Grid.Row="0" Grid.Column="1" Click="cmdBrowseImportSheetFile_Click"
+                                    Margin="250,0,0,0" Grid.ColumnSpan="2" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Prune" VerticalAlignment="Top" Height="64" Margin="0,75,118,0"
+                              Grid.ColumnSpan="2">
+                        <Grid Margin="0,0,29,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Truncate Name to 50 or less"
+                                      x:Name="CKTrunateName" IsChecked="{Binding CKTruncateName, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsTrunateChecked, Converter={StaticResource InverseBooleanConverter}}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Prune $ from Price Fields"
+                                      x:Name="CKPruneDollar" IsChecked="{Binding CKPrune, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsPruneChecked, Converter={StaticResource InverseBooleanConverter}}"
+                                      Grid.ColumnSpan="2" Margin="10,0,-10,0" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Duplicate Seperator" VerticalAlignment="Top" Height="64" Margin="0,150,118,0"
+                              Grid.ColumnSpan="2">
+                        <Grid Margin="0,0,29,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Separate Duplicates"
+                                      x:Name="CKDuplicateSeperator"
+                                      IsChecked="{Binding CKDuplicateSeperator, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsDuplicateChecked,Converter={StaticResource InverseBooleanConverter}}" />
+                        </Grid>
+                    </GroupBox>
+                </Grid>
             </TabItem>
         </TabControl>
 
-        <Button Content="Execute" x:Name="btnGo" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-175,-5"  Click="btnGo_Click"/>
+        <Button Content="Execute" x:Name="btnGo" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="0,0,-175,-5" Click="btnGo_Click" />
 
         <!-- <Button Content="Execute" x:Name="btnGo" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-175,-5" Command="{Binding GoCommand}" Click="btnGo_Click"/> -->
-        <Button Content="Exit" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-219,-5" Click="CloseButton_Click"/>
+        <Button Content="Exit" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-219,-5"
+                Click="CloseButton_Click" />
 
-        <Label x:Name="lblStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Content="{Binding UpdateStatusTxt}"/>
-        <ListBox x:Name="logListBox" ItemsSource="{x:Static local:LogHelper.LogListBox}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,21,-219,0" Height="244" Width="190">
+        <Label x:Name="lblStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10"
+               Content="{Binding UpdateStatusTxt}" />
+        <ListBox x:Name="logListBox" ItemsSource="{x:Static local:LogHelper.LogListBox}" HorizontalAlignment="Right"
+                 VerticalAlignment="Top" Margin="0,21,-219,0" Height="244" Width="190">
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -122,5 +202,3 @@
     </Grid>
 
 </Window>
-
-    

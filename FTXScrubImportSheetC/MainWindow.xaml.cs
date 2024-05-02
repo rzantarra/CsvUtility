@@ -8,8 +8,7 @@ namespace FTXScrubImportSheetC
 {
     public partial class MainWindow : Window
     {
-
-        private MainWindowViewModel _viewModel; 
+        private MainWindowViewModel _viewModel;
         private CsvHelper _csvHelper;
 
         public MainWindow()
@@ -24,46 +23,42 @@ namespace FTXScrubImportSheetC
         #region Variables
 
         private string masterProductsFilePath;
+
         public string MasterProductsFilePath
         {
-            get
-            {
-                return masterProductsFilePath;
-            }
+            get { return masterProductsFilePath; }
 
             set { masterProductsFilePath = value; }
-
         }
 
         private string aliasProductsFilePath;
+
         public string AliasProdctsFilePath
         {
             get { return aliasProductsFilePath; }
             set { aliasProductsFilePath = value; }
-
         }
 
         private string importSheetFilePath;
+
         public string ImportSheetFilePath
         {
             get { return importSheetFilePath; }
             set { importSheetFilePath = value; }
         }
 
-
         #endregion
-        
+
         #region Events
-        
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             // Close the main window
             this.Close();
         }
-        
+
         private void cmdBrowseProductFile_Click(object sender, RoutedEventArgs e)
         {
-
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "CSV Files (*.csv)|*.csv";
             if (openFileDialog.ShowDialog() == true)
@@ -97,8 +92,8 @@ namespace FTXScrubImportSheetC
                 ImportSheetFilePath = openFileDialog.FileName;
             }
         }
-       
-        
+
+
         private bool OKToContinue_ScrubImport()
         {
             try
@@ -122,12 +117,13 @@ namespace FTXScrubImportSheetC
                 if (CKUpdateManufBrand.IsChecked == true) tmpNumChecked++;
                 if (CKExpandUPC.IsChecked == true) tmpNumChecked++;
                 if (tmpNumChecked == 0) throw new Exception("No Options Chosen");
-               
+
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Validating: " + ex.Message, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error Validating: " + ex.Message, "Validation Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return false;
             }
         }
@@ -135,18 +131,19 @@ namespace FTXScrubImportSheetC
         private async void btnGo_Click(object sender, RoutedEventArgs e)
         {
             TabItem selectedTab = tabControl.SelectedItem as TabItem;
-            
+
             if (selectedTab != null)
             {
                 if (selectedTab.Name == "Scrub_Importer") // Replace "tab1" with the actual name of your tab
                 {
-                    if (OKToContinue_ScrubImport() && await CsvHelper.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&
+                    if (OKToContinue_ScrubImport() &&
+                        await CsvHelper.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&
                         await CsvHelper.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
                         await CsvHelper.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
                     {
                         _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
                     }
-                    
+
                     if (CKExpandUPC.IsChecked == true)
                     {
                         _csvHelper.ExpandUpcOnly(_viewModel);
@@ -157,22 +154,21 @@ namespace FTXScrubImportSheetC
                         _csvHelper.ScrubImport(_viewModel);
                     }
                 }
-                else if (selectedTab.Name == "Pruner and Duplicate Hunter") // Replace "tab2" with the actual name of your tab
+                else if (selectedTab.Name ==
+                         "Pruner and Duplicate Hunter") // Replace "tab2" with the actual name of your tab
                 {
                     //ViewModel.ExecuteTab2Action();
                 }
-
             }
         }
 
-        
-
         #endregion
-        
-        
+
+
         #region To Remove
+
         //TODO Remove when ready 
-       
+
         // private async void cmdGo_Click(object sender, RoutedEventArgs e)
         // {
         //     if (OKToContinue_ScrubImport() && await MainWindowViewModel.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&
@@ -247,7 +243,7 @@ namespace FTXScrubImportSheetC
         //         }
         //     }
         // }
+
         #endregion
     }
-
 }
