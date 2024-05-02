@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -8,21 +10,21 @@ namespace FTXScrubImportSheetC
 {
     public class CsvHelper
     {
-
         #region Constructor
-        
+
         public CsvHelper(string installDirectory, string csvColumnHeaders)
         {
             InstallDirectory = installDirectory;
             CSVColumnHeaders = csvColumnHeaders;
-            
         }
 
-
         #endregion
+
         #region Variables
+
         public string InstallDirectory { get; private set; }
         public string CSVColumnHeaders { get; private set; }
+
         #endregion
 
         #region Functions
@@ -31,23 +33,24 @@ namespace FTXScrubImportSheetC
         {
             string tmpUpdateTxt;
             //string PrintFilePath = MainWindowViewModel.InstallDirectory;
-            
+
             _viewModel.UpdateStatusTxt = $"Expand Export Only Option Initiated";
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
             _viewModel.AddLogMessage(tmpUpdateTxt = "Expand Export Only Option Initiated.");
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            
+
             string filePath = Path.Combine(InstallDirectory, "ImportExpandedOnly_");
             WriteToCSV(_viewModel.ImportExpandedUPCData, "ImportExpandedOnly_");
             string message = $@"File Saved Successfully: {filePath}";
             //MessageBox.Show(message, "Expand Export Only Option", MessageBoxButton.OK, MessageBoxImage.Information);
-            
+
             _viewModel.UpdateStatusTxt = $"Expand Export Only Option Complete";
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
             _viewModel.AddLogMessage(tmpUpdateTxt = "Expand Export Only Option Complete");
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            
-           DataHelper.ClearProductDataList(_viewModel.CurrentMasterProducts);
+
+            //Clear each of the used Lists
+            DataHelper.ClearProductDataList(_viewModel.CurrentMasterProducts);
             DataHelper.ClearProductDataList(_viewModel.ImportFullData);
             DataHelper.ClearProductDataList(_viewModel.ImportNativeData);
             DataHelper.ClearProductDataList(_viewModel.ImportAliasFoundData);
@@ -56,15 +59,15 @@ namespace FTXScrubImportSheetC
             DataHelper.ClearProductDataList(_viewModel.ImportExpandedUPCData);
             DataHelper.ClearProductAliasList(_viewModel.ImportMasterProducts);
             DataHelper.ClearProductAliasList(_viewModel.CurrentMasterAliases);
-            
+
             _viewModel.UpdateStatusTxt = $"Scrub Cleanup: Wiping Internals";
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
             _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Cleanup: Wiping Internals.");
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            
+
             return;
         }
-        
+
         public void WriteToCSV(List<clsProductData> data, string fileNamePrefix)
         {
             try
@@ -423,6 +426,405 @@ namespace FTXScrubImportSheetC
 
             return field;
         }
+
+
+        public static async Task<bool> LoadMasterProducts(string FileToUse, MainWindowViewModel _viewModel)
+        {
+            try
+            {
+                using (var tmpFileReader = new StreamReader(FileToUse))
+                {
+                    // Skip the header row
+                    tmpFileReader.ReadLine();
+                    string tmpLine;
+                    int i = 0;
+                    while ((tmpLine = tmpFileReader.ReadLine()) != null)
+                    {
+                        i++;
+
+                        string statusMessagetoDisplay = "Processing Master Products Row " + i.ToString();
+
+                        Console.WriteLine(statusMessagetoDisplay);
+                        if (tmpLine.Contains("|"))
+                        {
+                            var values = tmpLine.Split('|').Select(v => v.Replace("\"", "")).ToArray();
+                            if (values.Length >= 17)
+                            {
+                                clsProductData tmpNewProduct = new clsProductData
+                                {
+                                    upc = values[0],
+                                    name = values[1],
+                                    description = values[2],
+                                    department = values[3],
+                                    department_number = values[4],
+                                    category = values[5],
+                                    manufacturer = values[6],
+                                    brand = values[7],
+                                    is_active = values[8],
+                                    cost = values[9],
+                                    price = values[10],
+                                    vendor = values[11],
+                                    part_num = values[12],
+                                    part_num_units = values[13],
+                                    part_cost = values[14],
+                                    child_upc = values[15],
+                                    num_units = values[16]
+                                };
+                                _viewModel.CurrentMasterProducts.Add(tmpNewProduct);
+                            }
+                        }
+                    }
+                }
+
+                string tmpUpdateTxt;
+
+                _viewModel.UpdateStatusTxt = "Master Products Import Complete...";
+                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                _viewModel.AddLogMessage(tmpUpdateTxt = "Master Products Import Complete...");
+                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _viewModel.UpdateStatusTxt = "Idle";
+                MessageBox.Show("Error Loading Master Products From File: " + ex.Message);
+                return false;
+            }
+        }
+
+        public static async Task<bool> LoadMasterAliases(string FileToUse, MainWindowViewModel _viewModel)
+        {
+            string tmpUpdateTxt;
+            try
+            {
+                _viewModel.UpdateStatusTxt = "Importing Alias List...";
+                // await Task.Delay(100);
+                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+                _viewModel.AddLogMessage(tmpUpdateTxt = "Importing Alias List...");
+                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+
+                string tmpUPC, tmpAlias;
+                using (var tmpFileReader = new StreamReader(FileToUse))
+                {
+                    // Skip the header row
+                    tmpFileReader.ReadLine();
+
+                    string tmpLine;
+                    int i = 0;
+                    while ((tmpLine = tmpFileReader.ReadLine()) != null)
+                    {
+                        i++;
+                        string statusMessagetoDisplay = "Processing Alias Row " + i.ToString();
+
+                        Console.WriteLine(statusMessagetoDisplay);
+                        ;
+                        if (tmpLine.Contains("|"))
+                        {
+                            tmpUPC = tmpLine.Split('|')[0];
+                            tmpUPC = tmpUPC.Replace("\"", "");
+                            tmpUPC = tmpUPC.Replace(",", "");
+
+                            tmpAlias = tmpLine.Split('|')[1];
+                            tmpAlias = tmpAlias.Replace("\"", "");
+                            tmpAlias = tmpAlias.Replace(",", "");
+
+                            clsProductAlias tmpNewAlias = new clsProductAlias();
+                            tmpNewAlias.alias = tmpAlias;
+                            tmpNewAlias.upc = tmpUPC;
+                            _viewModel.CurrentMasterAliases.Add(tmpNewAlias);
+                        }
+                    }
+                }
+
+                _viewModel.UpdateStatusTxt = "Master Alias Import Complete";
+                _viewModel.AddLogMessage(tmpUpdateTxt = "Master Alias Import Complete...");
+                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _viewModel.UpdateStatusTxt = "Idle...";
+                MessageBox.Show("Error Loading Master Aliases From File: " + ex.Message);
+                return false;
+            }
+        }
+
+        public static async Task<bool> LoadImportSheetProducts(string FileToUse, MainWindowViewModel _viewModel)
+        {
+            string tmpUpdateTxt;
+            try
+            {
+                _viewModel.UpdateStatusTxt = "Importing Client Import Products...";
+                await Task.Delay(1);
+                _viewModel.AddLogMessage(tmpUpdateTxt = "Importing Client Import Prosducts...");
+                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+                using (var tmpFileReader = new System.IO.StreamReader(FileToUse))
+                {
+                    string tmpLine;
+                    tmpLine = tmpFileReader.ReadLine();
+                    int i = 0;
+
+                    while (tmpLine != null)
+                    {
+                        i++;
+
+                        if (i > 1 && tmpLine.Contains(","))
+                        {
+                            var values = tmpLine.Split(',').Select(v => v.Replace("\"", "")).ToArray();
+                            if (values.Length >= 17)
+                            {
+                                clsProductData tmpNewProduct = new clsProductData
+                                {
+                                    upc = values[0],
+                                    name = values[1],
+                                    description = values[2],
+                                    department = values[3],
+                                    department_number = values[4],
+                                    category = values[5],
+                                    manufacturer = values[6],
+                                    brand = values[7],
+                                    is_active = values[8],
+                                    cost = values[9],
+                                    price = values[10],
+                                    vendor = values[11],
+                                    part_num = values[12],
+                                    part_num_units = values[13],
+                                    part_cost = values[14],
+                                    child_upc = values[15],
+                                    num_units = values[16]
+                                };
+                                _viewModel.ImportNativeData.Add(tmpNewProduct);
+                            }
+                        }
+
+                        tmpLine = tmpFileReader.ReadLine();
+                    }
+                }
+
+                _viewModel.UpdateStatusTxt = "Client Import Products Import Complete...";
+
+                _viewModel.AddLogMessage(tmpUpdateTxt = "Client Import Products Import Complete...");
+                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _viewModel.UpdateStatusTxt = "Idle";
+                MessageBox.Show("Error Loading Import Sheet Products From File: " + ex.Message + ex.StackTrace);
+                return false;
+            }
+        }
+
+        #region Tab Data Functions
+
+        public async Task ScrubImport(MainWindowViewModel _viewModel)
+        {
+            string tmpUpdateTxt;
+
+            // Step 1: Wildcard search of ImportNativeData UPC field against CurrentMasterProducts
+            _viewModel.UpdateStatusTxt = $"Scrub Step 1: Wildcard Search of Import Data Against Master Products";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 1: Wildcard Search of Import Data...");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+            foreach (var importData in _viewModel.ImportNativeData)
+            {
+                if (string.IsNullOrEmpty(importData.upc))
+                {
+                    //Skip Processing
+                    continue;
+                }
+
+                var upc = importData.upc.Trim().Replace("*", ""); // Remove leading and trailing '*' characters
+
+                var pattern =
+                    ".*" + Regex.Escape(upc) + ".*"; // Match UPC with wildcards at the beginning, end, or both
+
+
+                Console.WriteLine("Pattern: " + pattern);
+                var matchingUPCs = _viewModel.CurrentMasterProducts.Where(p => Regex.IsMatch(p.upc, pattern))
+                    .Select(p => p.upc)
+                    .ToList();
+
+                if (matchingUPCs.Any())
+                {
+                    // Add all variables of matching UPCs to ImportNAData
+                    _viewModel.ImportNAData.AddRange(
+                        _viewModel.CurrentMasterProducts.Where(p => matchingUPCs.Contains(p.upc)));
+                }
+                else
+                {
+                    // Add all variables of non-matching UPCs to ImportNotFoundData
+                    _viewModel.ImportNotFoundData.Add(importData);
+                }
+            }
+
+            // Step 2: Search CurrentMasterProducts against ImportExpandedUPCData
+            _viewModel.UpdateStatusTxt = $"Scrub Step 2: Compare Master Products against Import Expanded UPC";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 2: Compare Mster Products against Expanded UPC...");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+            var expandedUPCs = _viewModel.ImportExpandedUPCData.Select(p => p.upc).ToList();
+            var matchedUPCs = _viewModel.CurrentMasterProducts.Where(p => expandedUPCs.Contains(p.upc))
+                .Select(p => p.upc)
+                .ToList();
+
+            foreach (var matchUPC in matchedUPCs)
+            {
+                var matchedProducts = _viewModel.CurrentMasterProducts.Where(p => p.upc == matchUPC).ToList();
+
+                foreach (var product in matchedProducts)
+                {
+                    var updatedProduct = new clsProductData
+                    {
+                        upc = product.upc,
+                        category = _viewModel.CKUpdateCategories
+                            ? product.category
+                            : _viewModel.ImportFullData.FirstOrDefault(d => d.upc == product.upc)?.category,
+                        description = _viewModel.CKUpdateDescriptions
+                            ? product.description
+                            : _viewModel.ImportFullData.FirstOrDefault(d => d.upc == product.upc)?.description,
+                        department = _viewModel.CKUpdateDept
+                            ? product.department
+                            : _viewModel.ImportFullData.FirstOrDefault(d => d.upc == product.upc)?.department,
+                        manufacturer = _viewModel.CKUpdateManufBrand
+                            ? product.manufacturer
+                            : _viewModel.ImportFullData.FirstOrDefault(d => d.upc == product.upc)?.manufacturer,
+                        brand = _viewModel.CKUpdateManufBrand
+                            ? product.brand
+                            : _viewModel.ImportFullData.FirstOrDefault(d => d.upc == product.upc)?.brand,
+                        name = product.name,
+                        department_number = product.department_number,
+                        is_active = product.is_active,
+                        cost = product.cost,
+                        price = product.price,
+                        vendor = product.vendor,
+                        part_num = product.part_num,
+                        part_num_units = product.part_num_units,
+                        part_cost = product.part_cost,
+                        child_upc = product.child_upc,
+                        num_units = product.num_units
+                    };
+
+                    _viewModel.ImportFullData.Add(updatedProduct);
+                }
+
+                _viewModel.ImportNAData.RemoveAll(p => p.upc == matchUPC);
+            }
+
+            // Step 3: Search CurrentMasterAlias for aliases in ImportNotFoundData
+            _viewModel.UpdateStatusTxt = $"Scrub Step 3: ImportNotFound UPC search in Current Master Alias";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step : ImportNotFound UPC search...");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+            foreach (var importData in _viewModel.ImportNotFoundData)
+            {
+                var originUpc = importData.upc;
+                if (string.IsNullOrEmpty(originUpc))
+                {
+                    continue; // Skip if UPC is empty
+                }
+
+                var matchingAlias = _viewModel.CurrentMasterAliases.FirstOrDefault(p => p.upc == originUpc);
+                if (matchingAlias != null)
+                {
+                    // Update UPC to Alias
+                    importData.upc = matchingAlias.alias;
+
+                    var matchingProduct = _viewModel.CurrentMasterProducts.FirstOrDefault(p => p.upc == importData.upc);
+
+                    if (matchingProduct != null)
+                    {
+                        // Update other data based on flags
+                        if (_viewModel.CKUpdateCategories)
+                        {
+                            importData.category = matchingProduct.category;
+                        }
+
+                        if (_viewModel.CKUpdateDescriptions)
+                        {
+                            importData.description = matchingProduct.description;
+                        }
+
+                        if (_viewModel.CKUpdateDept)
+                        {
+                            importData.department = matchingProduct.department;
+                        }
+
+                        if (_viewModel.CKUpdateManufBrand)
+                        {
+                            importData.manufacturer = matchingProduct.manufacturer;
+                            importData.brand = matchingProduct.brand;
+                        }
+
+                        _viewModel.ImportFullData.Add(importData);
+                        // Add to ImportAliasFoundData
+                        _viewModel.ImportAliasFoundData.Add(importData);
+                    }
+                }
+            }
+
+            string timestamp = DateTime.Now.ToString("MMddyy_hhmmss");
+            string tmpPrintFilePath = MainWindowViewModel.InstallDirectory;
+
+            _viewModel.UpdateStatusTxt = $"Scrub Step 4: Collate and Write to CSV";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 4: Collate and Write CSV...");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+            //Print Results
+
+            WriteToCSV(_viewModel.ImportNAData, $"ImportNeedsAttentionFound_{timestamp}");
+            WriteToCSV(_viewModel.ImportNotFoundData, $"ImportNotFound_{timestamp}");
+            WriteToCSV(_viewModel.ImportFullData, $"ImportFullFound_{timestamp}");
+            WriteToCSV(_viewModel.ImportAliasFoundData, $"ImportAliasFoundData_{timestamp}");
+
+            String message = @"Scrubbing Completed." + Environment.NewLine +
+                             "Files Can Be found here:" + Environment.NewLine + Environment.NewLine +
+                             $"{tmpPrintFilePath}_ImportNeedsAttentionFound_{timestamp}" + Environment.NewLine +
+                             $"{tmpPrintFilePath}_ImportNotFound_{timestamp}" + Environment.NewLine +
+                             $"{tmpPrintFilePath}_ImportFullFound_{timestamp}" + Environment.NewLine +
+                             $"{tmpPrintFilePath}_ImportAliasFoundData_{timestamp}";
+
+            MessageBox.Show(message);
+
+            _viewModel.AddLogMessage(message);
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+            _viewModel.UpdateStatusTxt = $"Scrub Step 5: Clear Temp Variable Data";
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 5: Clear Temp Data...");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+            //Clear Data: 
+            DataHelper.ClearProductDataList(_viewModel.CurrentMasterProducts);
+            DataHelper.ClearProductDataList(_viewModel.ImportFullData);
+            DataHelper.ClearProductDataList(_viewModel.ImportNativeData);
+            DataHelper.ClearProductDataList(_viewModel.ImportAliasFoundData);
+            DataHelper.ClearProductDataList(_viewModel.ImportNAData);
+            DataHelper.ClearProductDataList(_viewModel.ImportNotFoundData);
+            DataHelper.ClearProductDataList(_viewModel.ImportExpandedUPCData);
+            DataHelper.ClearProductAliasList(_viewModel.ImportMasterProducts);
+            DataHelper.ClearProductAliasList(_viewModel.CurrentMasterAliases);
+
+            Console.WriteLine("testingfor Clearing of Variables");
+
+            _viewModel.UpdateStatusTxt = $"Idle...";
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+
+            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrubbing Complete");
+            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+        }
+        
+        public async Task Pruner(MainWindowViewModel _viewModel)
+        {}
+        
+
+        #endregion
 
         #endregion
     }

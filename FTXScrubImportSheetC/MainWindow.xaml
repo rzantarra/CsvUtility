@@ -17,8 +17,8 @@
         <local:MainWindowViewModel/>
     </Window.DataContext>
     <Grid Margin="15,15,263,10">
-        <TabControl>
-            <TabItem Header ="Scrub Importer">
+        <TabControl x:Name="tabControl">
+            <TabItem Header ="Scrub Importer" x:Name="Scrub_Importer">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="25*"/>
@@ -97,17 +97,16 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Duplicate Seperator">
+            <TabItem Header="Pruner and Duplicate Hunter">
                 <GroupBox Header="Import CSV" HorizontalAlignment="Left" VerticalAlignment="Top">
                    
                 </GroupBox>
-                          
-            </TabItem>
-            <TabItem Header="Trucate and $ remove">
             </TabItem>
         </TabControl>
 
-        <Button Content="Execute" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-175,-5" Command="{Binding GoCommand}" Click="cmdGo_Click"/>
+        <Button Content="Execute" x:Name="btnGo" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-175,-5"  Click="btnGo_Click"/>
+
+        <!-- <Button Content="Execute" x:Name="btnGo" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-175,-5" Command="{Binding GoCommand}" Click="btnGo_Click"/> -->
         <Button Content="Exit" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-219,-5" Click="CloseButton_Click"/>
 
         <Label x:Name="lblStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Content="{Binding UpdateStatusTxt}"/>

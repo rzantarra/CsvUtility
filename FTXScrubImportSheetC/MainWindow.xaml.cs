@@ -18,7 +18,6 @@ namespace FTXScrubImportSheetC
             _viewModel = new MainWindowViewModel();
             _csvHelper = new CsvHelper(MainWindowViewModel.InstallDirectory, MainWindowViewModel.CSVColumnHeaders);
             DataContext = _viewModel;
-            //_csvHelper = new CSVHelper();
         }
 
 
@@ -98,33 +97,9 @@ namespace FTXScrubImportSheetC
                 ImportSheetFilePath = openFileDialog.FileName;
             }
         }
-        private async void cmdGo_Click(object sender, RoutedEventArgs e)
-        {
-            if (OKToContinue() && await MainWindowViewModel.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&
-                await MainWindowViewModel.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
-                await MainWindowViewModel.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
-            {
-                _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
-            }
-            else
-            {
-                return;
-            }
-
-            if (CKExpandUPC.IsChecked == true)
-            {
-                _csvHelper.ExpandUpcOnly(_viewModel);
-                return;
-            }
-            else
-            {
-                _viewModel.ScrubImport(_viewModel);
-            }
-            
-            
-        }
+       
         
-        private bool OKToContinue()
+        private bool OKToContinue_ScrubImport()
         {
             try
             {
@@ -156,8 +131,123 @@ namespace FTXScrubImportSheetC
                 return false;
             }
         }
-        #endregion
 
+        private async void btnGo_Click(object sender, RoutedEventArgs e)
+        {
+            TabItem selectedTab = tabControl.SelectedItem as TabItem;
+            
+            if (selectedTab != null)
+            {
+                if (selectedTab.Name == "Scrub_Importer") // Replace "tab1" with the actual name of your tab
+                {
+                    if (OKToContinue_ScrubImport() && await CsvHelper.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&
+                        await CsvHelper.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
+                        await CsvHelper.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
+                    {
+                        _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
+                    }
+                    
+                    if (CKExpandUPC.IsChecked == true)
+                    {
+                        _csvHelper.ExpandUpcOnly(_viewModel);
+                        return;
+                    }
+                    else
+                    {
+                        _csvHelper.ScrubImport(_viewModel);
+                    }
+                }
+                else if (selectedTab.Name == "Pruner and Duplicate Hunter") // Replace "tab2" with the actual name of your tab
+                {
+                    //ViewModel.ExecuteTab2Action();
+                }
+
+            }
+        }
+
+        
+
+        #endregion
+        
+        
+        #region To Remove
+        //TODO Remove when ready 
+       
+        // private async void cmdGo_Click(object sender, RoutedEventArgs e)
+        // {
+        //     if (OKToContinue_ScrubImport() && await MainWindowViewModel.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&
+        //                                  await MainWindowViewModel.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
+        //                                  await MainWindowViewModel.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
+        //     {
+        //         _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
+        //     }
+        //     else
+        //     {
+        //         return;
+        //     }
+        //
+        //     if (CKExpandUPC.IsChecked == true)
+        //     {
+        //         _csvHelper.ExpandUpcOnly(_viewModel);
+        //         return;
+        //     }
+        //     else
+        //     {
+        //         _viewModel.ScrubImport(_viewModel);
+        //     }
+        //     
+        //     
+        // }
+        //not nessesary
+        // private async void tab1ClickHandler(object sender, RoutedEventArgs e)
+        // {
+        //
+        //     else
+        //     {
+        //         return;
+        //     }
+        //
+        //     if (CKExpandUPC.IsChecked == true)
+        //     {
+        //         _csvHelper.ExpandUpcOnly(_viewModel);
+        //         return;
+        //     }
+        //     else
+        //     {
+        //         _viewModel.ScrubImport(_viewModel);
+        //     }
+        // }
+        //
+        // private void tab2ClickHandler(object sender, RoutedEventArgs e)
+        // {
+        //     // Code for tab 2
+        // }
+
+        // private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        // {
+        //     TabItem selectedTab = tabControl.SelectedItem as TabItem;
+        //
+        //     // Check which tab is selected and update button behavior
+        //     if (selectedTab != null)
+        //     {
+        //         if (selectedTab.Name == "Scrub Importer") // Replace "tab1" with the actual name of your tab
+        //         {
+        //             btnGo.Click -= tab2ClickHandler;
+        //             btnGo.Click += tab1ClickHandler;
+        //         }
+        //         else if (selectedTab.Name == "Pruner and Duplicate") // Replace "tab2" with the actual name of your tab
+        //         {
+        //             btnGo.Click -= tab1ClickHandler;
+        //             btnGo.Click += tab2ClickHandler;
+        //         }
+        //         else if (selectedTab.Name == "tab3") // Replace "tab3" with the actual name of your tab
+        //         {
+        //             btnGo.Click -= tab1ClickHandler;
+        //             btnGo.Click += tab2ClickHandler;
+        //         }
+        //     }
+        // }
+        #endregion
     }
 
 }
