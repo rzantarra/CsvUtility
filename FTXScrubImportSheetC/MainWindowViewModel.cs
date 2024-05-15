@@ -299,7 +299,7 @@ namespace FTXScrubImportSheetC
             }
         }
 
-        private bool _isUpdateDescriptionsEnabled = true;
+        private bool _isUpdateDescriptionsEnabled;
 
         public bool IsUpdateDescriptionsEnabled
         {
@@ -323,7 +323,7 @@ namespace FTXScrubImportSheetC
             }
         }
 
-        private bool _isUpdateDepartmentsEnabled = true;
+        private bool _isUpdateDepartmentsEnabled;
 
         public bool IsUpdateDepartmentsEnabled
         {
@@ -335,7 +335,7 @@ namespace FTXScrubImportSheetC
             }
         }
 
-        private bool _isUpdateManufBrandEnabled = true;
+        private bool _isUpdateManufBrandEnabled;
 
         public bool IsUpdateManufBrandEnabled
         {

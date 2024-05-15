@@ -633,14 +633,22 @@ namespace FTXScrubImportSheetC
         
                 var upc = importData.upc.Trim().Replace("*", ""); // Remove leading and trailing '*' characters
         
-                var pattern =
-                    ".*" + Regex.Escape(upc) + ".*"; // Match UPC with wildcards at the beginning, end, or both
-        
-        
-                Console.WriteLine("Pattern: " + pattern);
-                var matchingUPCs = _viewModel.CurrentMasterProducts.Where(p => Regex.IsMatch(p.upc, pattern))
+                // var pattern =
+                //     ".*" + Regex.Escape(upc) + ".*"; // Match UPC with wildcards at the beginning, end, or both
+
+                var matchingUPCs = _viewModel.CurrentMasterAliases
+                    .Where(p => p.upc.Contains(upc))
                     .Select(p => p.upc)
                     .ToList();
+        
+        
+                // Console.WriteLine("Pattern: " + pattern);
+                
+                Console.WriteLine("Pattern: " + upc );
+                
+                // var matchingUPCs = _viewModel.CurrentMasterProducts.Where(p => Regex.IsMatch(p.upc, pattern))
+                //     .Select(p => p.upc)
+                //     .ToList();
         
                 if (matchingUPCs.Any())
                 {
