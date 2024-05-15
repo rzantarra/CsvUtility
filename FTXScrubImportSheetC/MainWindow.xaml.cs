@@ -134,7 +134,7 @@ namespace FTXScrubImportSheetC
 
             if (selectedTab != null)
             {
-                if (selectedTab.Name == "Scrub_Importer") // Replace "tab1" with the actual name of your tab
+                if (selectedTab.Name == "Scrub_Importer") 
                 {
                     if (OKToContinue_ScrubImport() &&
                         await CsvHelper.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&

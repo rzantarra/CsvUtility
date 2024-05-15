@@ -34,20 +34,18 @@ namespace FTXScrubImportSheetC
             string tmpUpdateTxt;
             //string PrintFilePath = MainWindowViewModel.InstallDirectory;
 
-            _viewModel.UpdateStatusTxt = $"Expand Export Only Option Initiated";
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Expand Export Only Option Initiated.");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Expand Export ONly Option Initiated", 
+                "Expand Only Option Initiated.");
+            
             string filePath = Path.Combine(InstallDirectory, "ImportExpandedOnly_");
             WriteToCSV(_viewModel.ImportExpandedUPCData, "ImportExpandedOnly_");
             string message = $@"File Saved Successfully: {filePath}";
             //MessageBox.Show(message, "Expand Export Only Option", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            _viewModel.UpdateStatusTxt = $"Expand Export Only Option Complete";
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Expand Export Only Option Complete");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Expand Export Only Option Complete", 
+                "Expand Export Only Option Complete");
 
             //Clear each of the used Lists
             DataHelper.ClearProductDataList(_viewModel.CurrentMasterProducts);
@@ -60,12 +58,9 @@ namespace FTXScrubImportSheetC
             DataHelper.ClearProductAliasList(_viewModel.ImportMasterProducts);
             DataHelper.ClearProductAliasList(_viewModel.CurrentMasterAliases);
 
-            _viewModel.UpdateStatusTxt = $"Scrub Cleanup: Wiping Internals";
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Cleanup: Wiping Internals.");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
-            return;
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Scrub Cleanup: Wiping Internals", 
+                "Scrut Cleanup: Wiping Internals");
         }
 
         public void WriteToCSV(List<clsProductData> data, string fileNamePrefix)
@@ -77,7 +72,7 @@ namespace FTXScrubImportSheetC
 
                 // Combine the directory path and file name to get the full file path
                 string filePath = Path.Combine(InstallDirectory, fileName);
-                //PrintFilePath = filePath; //PrintFilePath is not defined here 
+
 
                 // Open the CSV file for writing
                 using (StreamWriter sw = new StreamWriter(filePath))
@@ -478,10 +473,9 @@ namespace FTXScrubImportSheetC
 
                 string tmpUpdateTxt;
 
-                _viewModel.UpdateStatusTxt = "Master Products Import Complete...";
-                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-                _viewModel.AddLogMessage(tmpUpdateTxt = "Master Products Import Complete...");
-                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                await LogHelper.UpdateStatusAndLog(_viewModel, 
+                    "Master Products Import Complete...", 
+                    "Master Products Import Complete...");
                 return true;
             }
             catch (Exception ex)
@@ -497,12 +491,10 @@ namespace FTXScrubImportSheetC
             string tmpUpdateTxt;
             try
             {
-                _viewModel.UpdateStatusTxt = "Importing Alias List...";
-                // await Task.Delay(100);
-                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
-                _viewModel.AddLogMessage(tmpUpdateTxt = "Importing Alias List...");
-                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                await LogHelper.UpdateStatusAndLog(_viewModel, 
+                    "Importing Alias List...", 
+                    "Importing Alias List...");
+                
 
 
                 string tmpUPC, tmpAlias;
@@ -538,9 +530,10 @@ namespace FTXScrubImportSheetC
                     }
                 }
 
-                _viewModel.UpdateStatusTxt = "Master Alias Import Complete";
-                _viewModel.AddLogMessage(tmpUpdateTxt = "Master Alias Import Complete...");
-                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                await LogHelper.UpdateStatusAndLog(_viewModel, 
+                    "Master Alias Import Complete.", 
+                    "Master Alias Import Complete.");
+                
                 return true;
             }
             catch (Exception ex)
@@ -556,10 +549,10 @@ namespace FTXScrubImportSheetC
             string tmpUpdateTxt;
             try
             {
-                _viewModel.UpdateStatusTxt = "Importing Client Import Products...";
-                await Task.Delay(1);
-                _viewModel.AddLogMessage(tmpUpdateTxt = "Importing Client Import Prosducts...");
-                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                
+                await LogHelper.UpdateStatusAndLog(_viewModel, 
+                    "Importing Client Import Products...", 
+                    "Importing Client Import Products...");
 
                 using (var tmpFileReader = new System.IO.StreamReader(FileToUse))
                 {
@@ -604,10 +597,10 @@ namespace FTXScrubImportSheetC
                     }
                 }
 
-                _viewModel.UpdateStatusTxt = "Client Import Products Import Complete...";
-
-                _viewModel.AddLogMessage(tmpUpdateTxt = "Client Import Products Import Complete...");
-                await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                await LogHelper.UpdateStatusAndLog(_viewModel, 
+                    "Client Import Products Import Complete...", 
+                    "Client Import Products Import Complete...");
+                
                 return true;
             }
             catch (Exception ex)
@@ -620,16 +613,16 @@ namespace FTXScrubImportSheetC
 
         #region Tab Data Functions
 
-        public async Task ScrubImport(MainWindowViewModel _viewModel)
+        public async Task ScrubImport(MainWindowViewModel _viewModel) //Original
         {
             string tmpUpdateTxt;
-
+        
             // Step 1: Wildcard search of ImportNativeData UPC field against CurrentMasterProducts
-            _viewModel.UpdateStatusTxt = $"Scrub Step 1: Wildcard Search of Import Data Against Master Products";
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 1: Wildcard Search of Import Data...");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
+            
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Scrub Step 1: Wildcard Search of Import Data Against Master Products", 
+                "Scrub Step 1: Wildcard Search of Import Data...");
+        
             foreach (var importData in _viewModel.ImportNativeData)
             {
                 if (string.IsNullOrEmpty(importData.upc))
@@ -637,18 +630,18 @@ namespace FTXScrubImportSheetC
                     //Skip Processing
                     continue;
                 }
-
+        
                 var upc = importData.upc.Trim().Replace("*", ""); // Remove leading and trailing '*' characters
-
+        
                 var pattern =
                     ".*" + Regex.Escape(upc) + ".*"; // Match UPC with wildcards at the beginning, end, or both
-
-
+        
+        
                 Console.WriteLine("Pattern: " + pattern);
                 var matchingUPCs = _viewModel.CurrentMasterProducts.Where(p => Regex.IsMatch(p.upc, pattern))
                     .Select(p => p.upc)
                     .ToList();
-
+        
                 if (matchingUPCs.Any())
                 {
                     // Add all variables of matching UPCs to ImportNAData
@@ -662,21 +655,23 @@ namespace FTXScrubImportSheetC
                 }
             }
 
+            Console.WriteLine("Testing here");
             // Step 2: Search CurrentMasterProducts against ImportExpandedUPCData
-            _viewModel.UpdateStatusTxt = $"Scrub Step 2: Compare Master Products against Import Expanded UPC";
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 2: Compare Mster Products against Expanded UPC...");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
+            
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Scrub Step 2: Compare Master Products against Import Expanded UPC", 
+                "Scrub Step 2: Compare Master Products against Expanded UPC...");
+            
+            //Expand Upcs
             var expandedUPCs = _viewModel.ImportExpandedUPCData.Select(p => p.upc).ToList();
             var matchedUPCs = _viewModel.CurrentMasterProducts.Where(p => expandedUPCs.Contains(p.upc))
                 .Select(p => p.upc)
                 .ToList();
-
+        
             foreach (var matchUPC in matchedUPCs)
             {
                 var matchedProducts = _viewModel.CurrentMasterProducts.Where(p => p.upc == matchUPC).ToList();
-
+        
                 foreach (var product in matchedProducts)
                 {
                     var updatedProduct = new clsProductData
@@ -709,19 +704,19 @@ namespace FTXScrubImportSheetC
                         child_upc = product.child_upc,
                         num_units = product.num_units
                     };
-
+        
                     _viewModel.ImportFullData.Add(updatedProduct);
                 }
-
+        
                 _viewModel.ImportNAData.RemoveAll(p => p.upc == matchUPC);
             }
-
+        
             // Step 3: Search CurrentMasterAlias for aliases in ImportNotFoundData
-            _viewModel.UpdateStatusTxt = $"Scrub Step 3: ImportNotFound UPC search in Current Master Alias";
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step : ImportNotFound UPC search...");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
+            
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Scrub Step 3: ImportNotFound UPC search in Current Master Alias", 
+                "Scrub Step : ImportNotFound UPC search...");
+        
             foreach (var importData in _viewModel.ImportNotFoundData)
             {
                 var originUpc = importData.upc;
@@ -729,15 +724,15 @@ namespace FTXScrubImportSheetC
                 {
                     continue; // Skip if UPC is empty
                 }
-
+        
                 var matchingAlias = _viewModel.CurrentMasterAliases.FirstOrDefault(p => p.upc == originUpc);
                 if (matchingAlias != null)
                 {
                     // Update UPC to Alias
                     importData.upc = matchingAlias.alias;
-
+        
                     var matchingProduct = _viewModel.CurrentMasterProducts.FirstOrDefault(p => p.upc == importData.upc);
-
+        
                     if (matchingProduct != null)
                     {
                         // Update other data based on flags
@@ -745,61 +740,60 @@ namespace FTXScrubImportSheetC
                         {
                             importData.category = matchingProduct.category;
                         }
-
+        
                         if (_viewModel.CKUpdateDescriptions)
                         {
                             importData.description = matchingProduct.description;
                         }
-
+        
                         if (_viewModel.CKUpdateDept)
                         {
                             importData.department = matchingProduct.department;
                         }
-
+        
                         if (_viewModel.CKUpdateManufBrand)
                         {
                             importData.manufacturer = matchingProduct.manufacturer;
                             importData.brand = matchingProduct.brand;
                         }
-
+        
                         _viewModel.ImportFullData.Add(importData);
                         // Add to ImportAliasFoundData
                         _viewModel.ImportAliasFoundData.Add(importData);
                     }
                 }
             }
-
+        
             string timestamp = DateTime.Now.ToString("MMddyy_hhmmss");
             string tmpPrintFilePath = MainWindowViewModel.InstallDirectory;
-
-            _viewModel.UpdateStatusTxt = $"Scrub Step 4: Collate and Write to CSV";
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 4: Collate and Write CSV...");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
+        
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Scrub Step 4: Collate and Write to CSV", 
+                "Scrub Step 4: Collate and Write to CSV");
+            
+        
             //Print Results
-
+        
             WriteToCSV(_viewModel.ImportNAData, $"ImportNeedsAttentionFound_{timestamp}");
             WriteToCSV(_viewModel.ImportNotFoundData, $"ImportNotFound_{timestamp}");
             WriteToCSV(_viewModel.ImportFullData, $"ImportFullFound_{timestamp}");
             WriteToCSV(_viewModel.ImportAliasFoundData, $"ImportAliasFoundData_{timestamp}");
-
+        
             String message = @"Scrubbing Completed." + Environment.NewLine +
                              "Files Can Be found here:" + Environment.NewLine + Environment.NewLine +
                              $"{tmpPrintFilePath}_ImportNeedsAttentionFound_{timestamp}" + Environment.NewLine +
                              $"{tmpPrintFilePath}_ImportNotFound_{timestamp}" + Environment.NewLine +
                              $"{tmpPrintFilePath}_ImportFullFound_{timestamp}" + Environment.NewLine +
                              $"{tmpPrintFilePath}_ImportAliasFoundData_{timestamp}";
-
+        
             MessageBox.Show(message);
-
+        
             _viewModel.AddLogMessage(message);
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
-            _viewModel.UpdateStatusTxt = $"Scrub Step 5: Clear Temp Variable Data";
-            _viewModel.AddLogMessage(tmpUpdateTxt = "Scrub Step 5: Clear Temp Data...");
-            await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
+            await LogHelper.UpdateStatusAndLog(_viewModel, 
+                "Scrub Step 5: Clear Temp Variable Data", 
+                "Scrub Step 5: Clear Temp Variable Data");
+        
             //Clear Data: 
             DataHelper.ClearProductDataList(_viewModel.CurrentMasterProducts);
             DataHelper.ClearProductDataList(_viewModel.ImportFullData);
@@ -810,18 +804,23 @@ namespace FTXScrubImportSheetC
             DataHelper.ClearProductDataList(_viewModel.ImportExpandedUPCData);
             DataHelper.ClearProductAliasList(_viewModel.ImportMasterProducts);
             DataHelper.ClearProductAliasList(_viewModel.CurrentMasterAliases);
-
+        
             Console.WriteLine("testingfor Clearing of Variables");
-
+        
             _viewModel.UpdateStatusTxt = $"Idle...";
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
-
+        
             _viewModel.AddLogMessage(tmpUpdateTxt = "Scrubbing Complete");
             await Task.Delay(TimeSpan.FromMilliseconds(0.5));
         }
 
         public async Task Pruner(MainWindowViewModel _viewModel)
         {
+        }
+
+        public async Task DuplicateHunter(MainWindowViewModel _viewmodel)
+        {
+            
         }
 
         #endregion
