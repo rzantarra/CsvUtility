@@ -170,7 +170,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Separate Duplicates"
+                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Separate Duplicate UPC"
                                       x:Name="CKDuplicateSeperator"
                                       IsChecked="{Binding CKDuplicateSeperator, Mode=TwoWay}"
                                       IsEnabled="{Binding IsDuplicateChecked,Converter={StaticResource InverseBooleanConverter}}" />

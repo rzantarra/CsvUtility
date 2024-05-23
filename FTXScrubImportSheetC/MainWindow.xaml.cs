@@ -127,6 +127,40 @@ namespace FTXScrubImportSheetC
                 return false;
             }
         }
+        
+        private bool OKToContinue_PrunerImport()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(txtProductsFile.Text)) throw new Exception("Invalid Products File");
+                if (string.IsNullOrEmpty(txtAliasFile.Text)) throw new Exception("Invalid Alias File");
+                if (string.IsNullOrEmpty(txtImportSheetFile.Text)) throw new Exception("Invalid Import Sheet File");
+
+                string tmpFileCheck = "";
+                tmpFileCheck = txtProductsFile.Text;
+                if (!System.IO.File.Exists(tmpFileCheck)) throw new Exception("Invalid Products File");
+                tmpFileCheck = txtAliasFile.Text;
+                if (!System.IO.File.Exists(tmpFileCheck)) throw new Exception("Invalid Alias File");
+                tmpFileCheck = txtImportSheetFile.Text;
+                if (!System.IO.File.Exists(tmpFileCheck)) throw new Exception("Invalid Import Sheet File");
+
+                int tmpNumChecked = 0;
+                if (CKUpdateCategories.IsChecked == true) tmpNumChecked++;
+                if (CKUpdateDept.IsChecked == true) tmpNumChecked++;
+                if (CKUpdateDescriptions.IsChecked == true) tmpNumChecked++;
+                if (CKUpdateManufBrand.IsChecked == true) tmpNumChecked++;
+                if (CKExpandUPC.IsChecked == true) tmpNumChecked++;
+                if (tmpNumChecked == 0) throw new Exception("No Options Chosen");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Validating: " + ex.Message, "Validation Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return false;
+            }
+        }
 
         private async void btnGo_Click(object sender, RoutedEventArgs e)
         {
@@ -141,7 +175,7 @@ namespace FTXScrubImportSheetC
                         await CsvHelper.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
                         await CsvHelper.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
                     {
-                        _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
+                       // _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
                     }
 
                     if (CKExpandUPC.IsChecked == true)
@@ -157,7 +191,8 @@ namespace FTXScrubImportSheetC
                 else if (selectedTab.Name ==
                          "Pruner and Duplicate Hunter") // Replace "tab2" with the actual name of your tab
                 {
-                    //ViewModel.ExecuteTab2Action();
+
+                    OKToContinue_PrunerImport();
                 }
             }
         }
@@ -166,83 +201,6 @@ namespace FTXScrubImportSheetC
 
 
         #region To Remove
-
-        //TODO Remove when ready 
-
-        // private async void cmdGo_Click(object sender, RoutedEventArgs e)
-        // {
-        //     if (OKToContinue_ScrubImport() && await MainWindowViewModel.LoadMasterProducts(MasterProductsFilePath, _viewModel) &&
-        //                                  await MainWindowViewModel.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
-        //                                  await MainWindowViewModel.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
-        //     {
-        //         _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
-        //     }
-        //     else
-        //     {
-        //         return;
-        //     }
-        //
-        //     if (CKExpandUPC.IsChecked == true)
-        //     {
-        //         _csvHelper.ExpandUpcOnly(_viewModel);
-        //         return;
-        //     }
-        //     else
-        //     {
-        //         _viewModel.ScrubImport(_viewModel);
-        //     }
-        //     
-        //     
-        // }
-        //not nessesary
-        // private async void tab1ClickHandler(object sender, RoutedEventArgs e)
-        // {
-        //
-        //     else
-        //     {
-        //         return;
-        //     }
-        //
-        //     if (CKExpandUPC.IsChecked == true)
-        //     {
-        //         _csvHelper.ExpandUpcOnly(_viewModel);
-        //         return;
-        //     }
-        //     else
-        //     {
-        //         _viewModel.ScrubImport(_viewModel);
-        //     }
-        // }
-        //
-        // private void tab2ClickHandler(object sender, RoutedEventArgs e)
-        // {
-        //     // Code for tab 2
-        // }
-
-        // private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        // {
-        //     TabItem selectedTab = tabControl.SelectedItem as TabItem;
-        //
-        //     // Check which tab is selected and update button behavior
-        //     if (selectedTab != null)
-        //     {
-        //         if (selectedTab.Name == "Scrub Importer") // Replace "tab1" with the actual name of your tab
-        //         {
-        //             btnGo.Click -= tab2ClickHandler;
-        //             btnGo.Click += tab1ClickHandler;
-        //         }
-        //         else if (selectedTab.Name == "Pruner and Duplicate") // Replace "tab2" with the actual name of your tab
-        //         {
-        //             btnGo.Click -= tab1ClickHandler;
-        //             btnGo.Click += tab2ClickHandler;
-        //         }
-        //         else if (selectedTab.Name == "tab3") // Replace "tab3" with the actual name of your tab
-        //         {
-        //             btnGo.Click -= tab1ClickHandler;
-        //             btnGo.Click += tab2ClickHandler;
-        //         }
-        //     }
-        // }
 
         #endregion
     }
