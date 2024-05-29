@@ -114,7 +114,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Pruner and Duplicate Hunter">
+            <TabItem Header="Pruner and Duplicate Hunter" x:Name="Prune_Dupe_Hunter">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="25*" />
@@ -151,15 +151,16 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <CheckBox Grid.Row="0" Grid.Column="0" Content="Truncate Name to 50 or less"
-                                      x:Name="CKTrunateName" IsChecked="{Binding CKTruncateName, Mode=TwoWay}"
-                                      IsEnabled="{Binding IsTrunateChecked, Converter={StaticResource InverseBooleanConverter}}" />
+                                      x:Name="CKTrunateName" IsChecked="{Binding CKTruncateName, Mode=TwoWay}" />
+
                             <CheckBox Grid.Row="0" Grid.Column="1" Content="Prune $ from Price Fields"
-                                      x:Name="CKPruneDollar" IsChecked="{Binding CKPrune, Mode=TwoWay}"
-                                      IsEnabled="{Binding IsPruneChecked, Converter={StaticResource InverseBooleanConverter}}"
+                                      x:Name="CKPruneDollar" IsChecked="{Binding CKPruneDollar, Mode=TwoWay}"
                                       Grid.ColumnSpan="2" Margin="10,0,-10,0" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Duplicate Seperator" VerticalAlignment="Top" Height="64" Margin="0,150,118,0"
+                    <GroupBox Header="Duplicate Separator" VerticalAlignment="Top" Height="64"
+                              Margin="0,150,118,
+                    0"
                               Grid.ColumnSpan="2">
                         <Grid Margin="0,0,29,0">
                             <Grid.RowDefinitions>
@@ -171,9 +172,8 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <CheckBox Grid.Row="0" Grid.Column="0" Content="Separate Duplicate UPC"
-                                      x:Name="CKDuplicateSeperator"
-                                      IsChecked="{Binding CKDuplicateSeperator, Mode=TwoWay}"
-                                      IsEnabled="{Binding IsDuplicateChecked,Converter={StaticResource InverseBooleanConverter}}" />
+                                      x:Name="CKDuplicateSeparator"
+                                      IsChecked="{Binding CKDuplicateSeparator, Mode=TwoWay}" />
                         </Grid>
                     </GroupBox>
                 </Grid>
@@ -183,7 +183,6 @@
         <Button Content="Execute" x:Name="btnGo" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Margin="0,0,-175,-5" Click="btnGo_Click" />
 
-        <!-- <Button Content="Execute" x:Name="btnGo" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-175,-5" Command="{Binding GoCommand}" Click="btnGo_Click"/> -->
         <Button Content="Exit" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-219,-5"
                 Click="CloseButton_Click" />
 

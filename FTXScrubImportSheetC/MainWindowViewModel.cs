@@ -32,7 +32,7 @@ namespace FTXScrubImportSheetC
             ImportMasterProducts = new List<clsProductAlias>();
             ImportNAData = new List<clsProductData>();
             ImportFullData = new List<clsProductData>();
-            ImportNotFoundData = new List<clsProductData>();
+            Import_NEEDS_REVIEW = new List<clsProductData>();
             ImportNativeData = new List<clsProductData>();
             ImportExpandedUPCData = new List<clsProductData>();
             ImportAliasFoundData = new List<clsProductData>();
@@ -58,7 +58,7 @@ namespace FTXScrubImportSheetC
 
         public List<clsProductData> ImportNAData = new List<clsProductData>();
         public List<clsProductData> ImportFullData = new List<clsProductData>();
-        public List<clsProductData> ImportNotFoundData = new List<clsProductData>();
+        public List<clsProductData> Import_NEEDS_REVIEW = new List<clsProductData>();
         public List<clsProductData> ImportAliasFoundData = new List<clsProductData>();
 
         private ObservableCollection<string> logListBox = new ObservableCollection<string>();
@@ -252,6 +252,7 @@ namespace FTXScrubImportSheetC
 
         private bool _ckExpandUPC;
 
+        //ExpandUPC  function Only 
         public bool CKExpandUPC
         {
             get { return _ckExpandUPC; }
@@ -299,60 +300,113 @@ namespace FTXScrubImportSheetC
             }
         }
 
-        private bool _isUpdateDescriptionsEnabled;
+        //Pruner/Duplicate section
 
-        public bool IsUpdateDescriptionsEnabled
+        private bool ckTruncateName;
+        private bool ckPruneDollar;
+        private bool ckDuplicateSeparator;
+        private bool _isPrunerChecked;
+        private bool _isDuplicateChecked;
+
+        //Public bools
+        public bool CKTruncateName
         {
-            get { return _isUpdateDescriptionsEnabled; }
+            get { return ckTruncateName; }
             set
             {
-                _isUpdateDescriptionsEnabled = value;
-                OnPropertyChanged();
+                if (ckTruncateName != value)
+                {
+                    ckTruncateName = value;
+                    OnPropertyChanged(nameof(CKTruncateName));
+                }
+
+                if (ckTruncateName)
+                {
+                    CKDuplicateSeparator = false;
+                }
             }
         }
 
-        private bool _isUpdateCategoriesEnabled;
-
-        public bool IsUpdateCategoriesEnabled
+        public bool CKPruneDollar
         {
-            get { return _isUpdateCategoriesEnabled; }
+            get { return ckPruneDollar; }
             set
             {
-                _isUpdateCategoriesEnabled = value;
-                OnPropertyChanged();
+                if (ckPruneDollar != value)
+                {
+                    ckPruneDollar = value;
+                    OnPropertyChanged(nameof(CKPruneDollar));
+                }
+
+                if (ckPruneDollar)
+                {
+                    CKDuplicateSeparator = false;
+                }
             }
         }
 
-        private bool _isUpdateDepartmentsEnabled;
-
-        public bool IsUpdateDepartmentsEnabled
+        public bool CKDuplicateSeparator
         {
-            get { return _isUpdateDepartmentsEnabled; }
+            get { return ckDuplicateSeparator; }
             set
             {
-                _isUpdateDepartmentsEnabled = value;
-                OnPropertyChanged();
+                if (ckDuplicateSeparator != value) ;
+                {
+                    ckDuplicateSeparator = value;
+                    OnPropertyChanged(nameof(CKDuplicateSeparator));
+                }
+                if (ckDuplicateSeparator)
+                {
+                    CKTruncateName = false;
+                    CKPruneDollar = false;
+                }
             }
         }
 
-        private bool _isUpdateManufBrandEnabled;
-
-        public bool IsUpdateManufBrandEnabled
+        public bool IsPrunerChecked
         {
-            get { return _isUpdateManufBrandEnabled; }
+            get { return _isPrunerChecked; }
             set
             {
-                _isUpdateManufBrandEnabled = value;
-                OnPropertyChanged();
+                if (_isPrunerChecked != value)
+                {
+                    _isPrunerChecked = value;
+                    OnPropertyChanged(nameof(IsPrunerChecked));
+
+                    if (_isPrunerChecked != value)
+                    {
+                        // If ExpandUPC Only is checked, uncheck and disable other checkboxes
+                        if ((_isPrunerChecked))
+                        {
+                            CKDuplicateSeparator = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool IsDuplicateChecked
+        {
+            get { return _isDuplicateChecked; }
+            set
+            {
+                if (_isDuplicateChecked != value)
+                {
+                    _isDuplicateChecked = value;
+                    OnPropertyChanged(nameof(IsDuplicateChecked));
+
+                    // If Duplicate is checked, uncheck and disable other checkboxes
+                    if (_isDuplicateChecked)
+                    {
+                        CKTruncateName = false;
+                        CKPruneDollar = false;
+                    }
+                }
             }
         }
 
 
         private string _statusMessage;
-
-        #endregion
-
-        #region Commands
 
         #endregion
 
@@ -414,7 +468,53 @@ namespace FTXScrubImportSheetC
         #region TmpTrash
 
         //TODO Remove if nessessary 
-
+        // private bool _isUpdateDescriptionsEnabled;
+        //
+        // public bool IsUpdateDescriptionsEnabled
+        // {
+        //     get { return _isUpdateDescriptionsEnabled; }
+        //     set
+        //     {
+        //         _isUpdateDescriptionsEnabled = value;
+        //         OnPropertyChanged();
+        //     }
+        // }
+        //
+        // private bool _isUpdateCategoriesEnabled;
+        //
+        // public bool IsUpdateCategoriesEnabled
+        // {
+        //     get { return _isUpdateCategoriesEnabled; }
+        //     set
+        //     {
+        //         _isUpdateCategoriesEnabled = value;
+        //         OnPropertyChanged();
+        //     }
+        // }
+        //
+        // private bool _isUpdateDepartmentsEnabled;
+        //
+        // public bool IsUpdateDepartmentsEnabled
+        // {
+        //     get { return _isUpdateDepartmentsEnabled; }
+        //     set
+        //     {
+        //         _isUpdateDepartmentsEnabled = value;
+        //         OnPropertyChanged();
+        //     }
+        // }
+        //
+        // private bool _isUpdateManufBrandEnabled;
+        //
+        // public bool IsUpdateManufBrandEnabled
+        // {
+        //     get { return _isUpdateManufBrandEnabled; }
+        //     set
+        //     {
+        //         _isUpdateManufBrandEnabled = value;
+        //         OnPropertyChanged();
+        //     }
+        // }
 
         #endregion
     }

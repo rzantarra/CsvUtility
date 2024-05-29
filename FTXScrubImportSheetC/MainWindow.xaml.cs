@@ -132,24 +132,18 @@ namespace FTXScrubImportSheetC
         {
             try
             {
-                if (string.IsNullOrEmpty(txtProductsFile.Text)) throw new Exception("Invalid Products File");
-                if (string.IsNullOrEmpty(txtAliasFile.Text)) throw new Exception("Invalid Alias File");
+
                 if (string.IsNullOrEmpty(txtImportSheetFile.Text)) throw new Exception("Invalid Import Sheet File");
 
                 string tmpFileCheck = "";
-                tmpFileCheck = txtProductsFile.Text;
-                if (!System.IO.File.Exists(tmpFileCheck)) throw new Exception("Invalid Products File");
-                tmpFileCheck = txtAliasFile.Text;
-                if (!System.IO.File.Exists(tmpFileCheck)) throw new Exception("Invalid Alias File");
                 tmpFileCheck = txtImportSheetFile.Text;
                 if (!System.IO.File.Exists(tmpFileCheck)) throw new Exception("Invalid Import Sheet File");
 
                 int tmpNumChecked = 0;
-                if (CKUpdateCategories.IsChecked == true) tmpNumChecked++;
-                if (CKUpdateDept.IsChecked == true) tmpNumChecked++;
-                if (CKUpdateDescriptions.IsChecked == true) tmpNumChecked++;
-                if (CKUpdateManufBrand.IsChecked == true) tmpNumChecked++;
-                if (CKExpandUPC.IsChecked == true) tmpNumChecked++;
+
+                if (CKTrunateName.IsChecked == true) tmpNumChecked++;
+                if (CKPruneDollar.IsChecked == true) tmpNumChecked++;
+                if (CKDuplicateSeparator.IsChecked == true) tmpNumChecked++;
                 if (tmpNumChecked == 0) throw new Exception("No Options Chosen");
 
                 return true;
@@ -189,10 +183,22 @@ namespace FTXScrubImportSheetC
                     }
                 }
                 else if (selectedTab.Name ==
-                         "Pruner and Duplicate Hunter") // Replace "tab2" with the actual name of your tab
+                         "Prune_Dupe_Hunter") // Replace "tab2" with the actual name of your tab
                 {
+                    if (OKToContinue_PrunerImport() &&
+                        await CsvHelper.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
+                    {
+                        if (CKDuplicateSeparator.IsChecked == true)
+                        {
+                            _csvHelper.DuplicateHunter(_viewModel);
+                        }
 
-                    OKToContinue_PrunerImport();
+                        if (CKTrunateName.IsChecked == true || CKPruneDollar.IsChecked == true)
+                        {
+                            _csvHelper.Pruner(_viewModel);
+                        }
+                    }
+
                 }
             }
         }
