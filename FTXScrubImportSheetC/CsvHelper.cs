@@ -838,17 +838,17 @@ namespace FTXScrubImportSheetC
             string timestamp = DateTime.Now.ToString("MMddyy_hhmmss");
             string tmpPrintFilePath = MainWindowViewModel.InstallDirectory;
 
-            WriteToCSV(_viewModel.ImportNAData, $"Import_Needs_Attention_{timestamp}");
-            WriteToCSV(_viewModel.Import_NEEDS_REVIEW, $"Import_Needs_Review_Expanded_{timestamp}");
-            WriteToCSV(_viewModel.ImportFullData, $"Import_Full_Found_{timestamp}");
-            WriteToCSV(_viewModel.ImportAliasFoundData, $"Import_Alias_Found_{timestamp}");
+            WriteToCSV(_viewModel.ImportNAData, $"{timestamp}_Import_Needs_Attention");
+            WriteToCSV(_viewModel.Import_NEEDS_REVIEW, $"{timestamp}_Import_Needs_Review_Expanded");
+            WriteToCSV(_viewModel.ImportFullData, $"{timestamp}_Import_Full_Found");
+            WriteToCSV(_viewModel.ImportAliasFoundData, $"{timestamp}_Import_Alias_Found");
 
             String message = @"Scrubbing Completed." + Environment.NewLine +
                              "Files Can Be found here:" + Environment.NewLine + Environment.NewLine +
-                             $"{tmpPrintFilePath}_Import_Needs_Attention_{timestamp}" + Environment.NewLine +
-                             $"{tmpPrintFilePath}_Import_NEEDS_REVIEW_{timestamp}" + Environment.NewLine +
-                             $"{tmpPrintFilePath}_Import_Full_Found_{timestamp}" + Environment.NewLine +
-                             $"{tmpPrintFilePath}_Import_Alias_Found_{timestamp}";
+                             $"{tmpPrintFilePath}{timestamp}_Import_Needs_Attention" + Environment.NewLine +
+                             $"{tmpPrintFilePath}{timestamp}_Import_NEEDS_REVIEW" + Environment.NewLine +
+                             $"{tmpPrintFilePath}{timestamp}_Import_Full_Found" + Environment.NewLine +
+                             $"{tmpPrintFilePath}{timestamp}_Import_Alias_Found";
 
             MessageBox.Show(message);
 
@@ -1126,11 +1126,11 @@ namespace FTXScrubImportSheetC
             string timestamp = DateTime.Now.ToString("MMddyy_hhmmss");
             string tmpPrintFilePath = MainWindowViewModel.InstallDirectory;
 
-            WriteToCSV(prunedData, $"Pruned_Import_Data_Sheet_{timestamp}");
+            WriteToCSV(prunedData, $"{timestamp}_Pruned_Import_Data_Sheet");
 
             String message = @"Scrubbing Completed." + Environment.NewLine +
                              "Files Can Be found here:" + Environment.NewLine + Environment.NewLine +
-                             $"{tmpPrintFilePath}Pruned_Import_Data_Sheet_{timestamp}";
+                             $"{tmpPrintFilePath}{timestamp}_Pruned_Import_Data_Sheet";
 
             MessageBox.Show(message);
 
@@ -1196,13 +1196,13 @@ namespace FTXScrubImportSheetC
             string timestamp = DateTime.Now.ToString("MMddyy_hhmmss");
             string tmpPrintFilePath = MainWindowViewModel.InstallDirectory;
 
-            WriteToCSV(DuplicateData, $"Duplicate_Data_Found_{timestamp}");
-            WriteToCSV(NonDuplicateData, $"NonDuplicate_Data_Found_{timestamp}");
+            WriteToCSV(DuplicateData, $"{timestamp}_Duplicate_Data_Found");
+            WriteToCSV(NonDuplicateData, $"{timestamp}_NonDuplicate_Data_Found");
 
             String message = @"Duplicate Hunter Complete." + Environment.NewLine +
                              "Files Can Be found here:" + Environment.NewLine + Environment.NewLine +
-                             $"{tmpPrintFilePath}_Duplicate_Data_Found){timestamp}" + Environment.NewLine +
-                             $"{tmpPrintFilePath}_NonDuplicate_Data_Found{timestamp}" + Environment.NewLine;
+                             $"{tmpPrintFilePath}{timestamp}_Duplicate_Data_Found)" + Environment.NewLine +
+                             $"{tmpPrintFilePath}{timestamp}_NonDuplicate_Data_Found" + Environment.NewLine;
 
             MessageBox.Show(message);
 

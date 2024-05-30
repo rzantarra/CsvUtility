@@ -169,18 +169,18 @@ namespace FTXScrubImportSheetC
                         await CsvHelper.LoadMasterAliases(AliasProdctsFilePath, _viewModel) &&
                         await CsvHelper.LoadImportSheetProducts(ImportSheetFilePath, _viewModel))
                     {
-                       // _viewModel.ExpandImportUPCProducts(_viewModel.ImportNativeData);
+                        if (CKExpandUPC.IsChecked == true)
+                        {
+                            _csvHelper.ExpandUpcOnly(_viewModel);
+                            return;
+                        }
+                        else
+                        {
+                            _csvHelper.ScrubImport(_viewModel);
+                        }
                     }
 
-                    if (CKExpandUPC.IsChecked == true)
-                    {
-                        _csvHelper.ExpandUpcOnly(_viewModel);
-                        return;
-                    }
-                    else
-                    {
-                        _csvHelper.ScrubImport(_viewModel);
-                    }
+
                 }
                 else if (selectedTab.Name ==
                          "Prune_Dupe_Hunter") // Replace "tab2" with the actual name of your tab
